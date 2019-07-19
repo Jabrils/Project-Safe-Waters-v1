@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LuxUnderWaterShaderVariants
+  m_Shaders:
+  - first: {fileID: 4800000, guid: 64155828dc43e46dfa7afe722365cea6, type: 3}
+    second:
+      variants: []
+  - first: {fileID: 4800000, guid: 7955b1dc75645ac40bcd52f5b2d4501f, type: 3}
+    second:
+      variants: []
+  - first: {fileID: 4800000, guid: dbe3bfac5535a8b4b8eff641061d2cf1, type: 3}
+    second:
+      variants: []
+  - first: {fileID: 4800000, guid: fc13d6f37ca5b4007aede4d6b1ced4da, type: 3}
+    second:
+      variants: []

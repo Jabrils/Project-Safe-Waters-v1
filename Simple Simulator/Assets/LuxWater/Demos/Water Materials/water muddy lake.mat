@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: water muddy lake
+  m_Shader: {fileID: 4800000, guid: 585366621acbcfc43805e78785fb85b8, type: 3}
+  m_ShaderKeywords: GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF
+    _GERSTNERDISPLACEMENT _PIXELSNAP_POINT _WORLDSPACEMAPPINGENABLED_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 26332f4582e5241cb852e58e42faac31, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CausticTex:
+        m_Texture: {fileID: 2800000, guid: 8e84949c077024a94a7f50a403373768, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LuxWater_ReflectionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 17c5930d7db244afb8decf6ebdc6894b, type: 3}
+        m_Scale: {x: 25.7, y: 36.4}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AbsorbptionDepth: 0.01
+    - _AbsorbptionScale: 1.44
+    - _AbsorbtionColorStrength: 0.98
+    - _AbsorbtionHeight: 0
+    - _AbsorbtionStrength: 1
+    - _AbsorptionColorStrength: 1
+    - _AbsorptionDepth: 0.369
+    - _AbsorptionHeight: 3.79
+    - _AbsorptionMaxHeight: 32
+    - _AbsorptionStrength: 1
+    - _BaseUVScale: 0.1
+    - _BumpParallax: 0.3
+    - _CausticMode: 1
+    - _CausticsEnabled: 1
+    - _CausticsScale: 0.5
+    - _CausticsSelfDistortion: 0.2
+    - _CausticsSpeed: 5
+    - _CausticsTiling: -0.4
+    - _Culling: 0
+    - _DeepFoamBlur: 0
+    - _DeepFoamCoverage: 1
+    - _DeepFoamTiling: 0.637
+    - _Density: 0.18
+    - _DensityDepth: 0.01
+    - _DepthAtten: 2.12
+    - _DetailDistance: 600
+    - _DetailFadeRange: 200
+    - _FinalFogDensity: 0
+    - _FoamCaps: 0.52
+    - _FoamEnabled: 1
+    - _FoamNormalMaskScale: 5
+    - _FoamNormalScale: 0.5
+    - _FoamParallax: 0.139
+    - _FoamScale: 7.6
+    - _FoamSmoothness: 0.1
+    - _FoamSoftIntersectionFactor: 0.92
+    - _FoamSpeed: -6
+    - _FoamTiling: 4
+    - _FoamTranslucencyIntensity: 1
+    - _FogAbsorptionCancellation: 0.2
+    - _FresbnelFactor: 5
+    - _FresnelPower: 5
+    - _GGlobalFrequency: 3
+    - _GGlobalRotation: 0
+    - _GGlobalSpeed: 1
+    - _GerstnerElevationFactor: 0.5
+    - _GerstnerEnabled: 1
+    - _GerstnerIntensity: 0.1
+    - _GerstnerNormalIntensity: 1
+    - _GerstnerPlanarNormalIntensity: 1
+    - _GerstnerVertexIntensity: 0.2
+    - _Glossiness: 0.92
+    - _HeightBasedScatteringMax: 2
+    - _HeightBasedScatteringPower: 2
+    - _Help: 0
+    - _HorizonOcclusion: 0
+    - _InvFade: 6
+    - _InvFadeParameter: 0.56
+    - _LuxWater_EdgeLength: 35
+    - _LuxWater_Extrusion: 0.1
+    - _LuxWater_Phong: 0.5
+    - _LuxWater_ReflectionTexMip: 10
+    - _MaxDirLightDepth: 64
+    - _MaxFogLightDepth: 64
+    - _Metallic: 0
+    - _OrthoSpport: 0
+    - _PixelSnap: 1
+    - _PixelSnapping: 0
+    - _PlanarEnabled: 0
+    - _PlaneReflectionBumpClamp: 0.05
+    - _PlaneReflectionBumpScale: 0.4
+    - _PlaneReflectionIntensityScale: 1
+    - _ReflectionBumpScale: 0.3
+    - _ReflectionGeoScale: 0.5
+    - _ReflectionGlossiness: 1
+    - _ReflectionSmoothing: 1
+    - _ReflectionStrength: 1
+    - _Refraction: 82
+    - _ScatterOcclusion: 0.03
+    - _ScatteringNormalInfluence: 0.1
+    - _ScatteringPower: 8
+    - _Tess: 1.3
+    - _TessMaxDisp: 2
+    - _TranslucencyIntensity: 1
+    - _UVSpaceMappingEnabled: 0
+    - _UnderwaterFoamParallax: 0.06
+    - _UnderwaterScatteringIntensity: 8
+    - _UnderwaterScatteringPower: 1.75
+    - _UsesWaterVolume: 0
+    - _WaterIOR: 1.25
+    - _WaterSurfaceYPos: 122.7
+    - _WorldSpaceMappingEnabled: 1
+    - _ZTest: 4
+    - _ZWrite: 1
+    m_Colors:
+    - _BumpParams: {r: 0.88, g: 0.5, b: 4.1, a: 0.2}
+    - _BumpRotation: {r: 0, g: 12, b: 5, a: 173.21}
+    - _BumpScale: {r: -1.3, g: 0.4, b: -0.2, a: 0}
+    - _BumpSpeed: {r: 1.8, g: -3.04, b: 2.8, a: 0.3}
+    - _BumpSpeedXXX: {r: 1.7, g: 1, b: 0, a: 0}
+    - _BumpTiling: {r: 0.2, g: 0.6, b: 1, a: 1}
+    - _Color: {r: 0.21323526, g: 0.2091695, b: 0.06585204, a: 0}
+    - _DeepFoamColor: {r: 0.7, g: 0.7, b: 0.7, a: 0.5}
+    - _DepthAtten: {r: 0, g: 25, b: 1, a: 0}
+    - _FarBumpSampleParams: {r: 0.2, g: 150, b: 0.37, a: -0.05}
+    - _FinalBumpRotation: {r: 2155.8538, g: 3.7999985, b: 118.79876, a: 118.79876}
+    - _FinalBumpSpeed01: {r: -0.53621256, g: -0.06384439, b: 0.90823203, a: -0.08281572}
+    - _FinalBumpSpeed23: {r: -0.8395901, g: -0.02623825, b: 0, a: 0}
+    - _FoamCapsContrast: {r: 0, g: 1, b: 0, a: 0}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 0.84}
+    - _GAmplitude: {r: 0.3, g: 0.1, b: 0.2, a: 0.12}
+    - _GDirectionAB: {r: 1, g: 0, b: 0.99026805, a: -0.13917312}
+    - _GDirectionCD: {r: 0.8192521, g: -0.5734335, b: 0.99992955, a: 0.011867961}
+    - _GFinalFrequency: {r: 3, g: 3.6000001, b: 3.75, a: 3.8999999}
+    - _GFinalSpeed: {r: 1.2, g: 0.9, b: -0.88, a: 1.58}
+    - _GFrequency: {r: 1, g: 1.2, b: 1.25, a: 1.3}
+    - _GRotation: {r: 0, g: 8, b: 34.99, a: -0.68}
+    - _GSpeed: {r: 1.2, g: 0.9, b: -0.88, a: 1.58}
+    - _GSteepness: {r: 2, g: 2, b: 2, a: 2}
+    - _GerstnerSecondaryWaves: {r: 0, g: 4.3, b: 0.3, a: 1.65}
+    - _GerstnerVertexIntensity: {r: 0.1, g: 0.1, b: 0.1, a: 0}
+    - _SpecColor: {r: 0.071, g: 0.071, b: 0.071, a: 1}
+    - _Speed: {r: 1.23, g: -1.49, b: 0.6, a: 0}
+    - _TranslucencyColor: {r: 0.1840398, g: 0.26841667, b: 0.27205884, a: 1}
+    - _UnderWaterReflCol: {r: 1, g: 1, b: 1, a: 0}
+    - _UpperColor: {r: 0, g: 0, b: 0, a: 1}

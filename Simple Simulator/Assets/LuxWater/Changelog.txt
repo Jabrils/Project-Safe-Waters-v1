@@ -1,0 +1,237 @@
+# Lux Water Changelog
+
+
+## Version 1.082
+
+### Fixed
+- Material editor issues in Unity 2019.
+
+
+## Version 1.081
+
+### Fixed
+- Water projectors support and split screen rendering.
+### Added
+- LuxWater_WaterVolume.cs: You may subscribe to OnTriggerEnter and OnTriggerExit.
+
+
+## Version 1.08
+
+### New features
+- Up to 8 Gerstner Waves are supported using a set of 4 secondary waves.
+- Support for sliding water volumes and water tiles has been added which lets your create huge if no infinite oceans.
+
+### Quick upgrade guide
+- Check the new "Detail Distance" and "Detail Fade Range" Properties (in Basic Properties):
+Currently these only effect Gerstner waves and foam caps and let you fade an expensive water plane in the foreground towards a simple water plane in the background. Furthermore fading displacement helps to reduce flickering and hides tiling. 
+- Check "Far Normal": "Fade (Y)". It has been renamed to "Distance (Y)" and now is the distance in meters at which the far normal will be fully revealed. Component W has been added so you can specify a dedicated speed value.
+- "Foam Caps" have been fully reworked and most likely will look broken. Their params have moved from the Gerstner to the Foam section in the inspector. Most likely you will have to adjust "Foam Caps" slightly. In case you like the old distribution of foam caps better raise "Mask by Elevation" to 1.0.
+- "Subsurface Scattering" has been unified, so underwater scattering picks up the specified color and power values. You may have to adjust your settings.
+
+### Fixed
+- Underwater particle and PBS lighting.
+
+### Changed
+- Subsurface scattering: Power of above and underwater rendering unified.
+- Foam: Disney diffuse lighting on foam skipped (reactivate it by editing the setup.cginc).
+- Foam Caps: New distribution formula for foam caps (when Gerstner waves are enabled).
+- Gerstner Waves: Normal Scale will be applied after Final Displacement (Y).
+- Tessellation: Clamped to (1, 31). It was not clamped before.
+- LuxWater_UnderWaterRendering.cs: Updated to support sliding volumes.
+- LuxWater_WaterVolume.cs: Updated to support sliding volumes.
+- LuxWater_Utils.cs: Updated to support 8 Gerstner waves.
+
+### Added
+- Subsurface scattering: Distortion exposed.
+- Subsurface scattering: Occlusion added.
+- Foam: Smoothness exposed.
+- Foam: Mask by Normal exposed.
+- Foam Caps: Mask by Elevation added.
+- Deep Foam Caps: Color and Opacity added.
+- Deep Foam Caps: Tiling added.
+- Deep Foam Caps: Blur added.
+- Gerstner Waves: Now up to 8 waves are supported using a set of 4 secondary waves.
+- LuxWater_SetToGerstnerHeight.cs: Added support for managing assigned Water projectors.
+
+
+## Version 1.075 Hotfix
+
+### Fixed
+- Accidently killed direct specular lighting fixed.
+- Brought back translucent lighting to above watersurface and factored in gerstner displacement.
+
+## Version 1.074
+
+### Fixed
+- LuxWater_ProjectorRenderer script: Fixed wrong "cb_Normals.ClearRenderTarget" leading to an always displaced watersurface and breaking underwater rendering. 
+
+### Changed
+- LuxWater_WaterVolumeTrigger script: Does not need to be added to a camera anymore as now you can assign one.
+- LuxWater_WaterVolume script: Tries to register to the LuxWater_UnderWaterRendering instance until it has finally found it.
+- LuxWater_UnderWaterRendering script: Option to search for the sun OnEnable added.
+- Water Surface shader: Phong tessellation has been disabled - as it did not do anything anyway.
+
+
+## Version 1.073
+
+### Fixed
+- Underwater Blur: Properly clamped to underwater.
+- Underwater Rendering: Opened scene view or additional cameras do not corrupt the rendered water mask anymore.
+- Water Surface shader, LuxUnderwater Transparent shaders: NaNs fixed.
+
+### Added
+- LuxWater_UnderWaterRendering script: Allows you to assign a shader variant collection to prevent hiccups on entering the water volume.
+
+### Changed
+- Underwater Rendering: Optimized and cleaned up Image effects.
+- Underwater Blur: Rendertexture set to RenderTextureFormat.DefaultHDR to get less banding.
+- Water Surface shader: More noise added.
+
+
+## Version 1.072
+
+### Fixed
+- Caustics in backside rendering fixed.
+
+### Changed
+- Deferred fog improved which now keeps fog above the water surface.
+
+
+## Version 1.071
+
+### Fixed
+- Built in fog and point or spot lights (add pass): Lights now get attenuated properly by fog.
+- UnderwaterFog: Light attenuation fixed if not set by script.
+- Metal: VFace handling for Unity >= 2017.1. fixed.
+- Water Surface Shader: Fixed missing Subsurface Scattering Intensity inputs.
+
+### Added
+- Underwater Post Shader and Water Surface Shader: Added some noise to reduce bending artifacts.
+- Support for Azure and Enviro added (regarding their custom fog).
+
+### Changed
+- LuxWater_UnderWaterRendering script: If "Enable Advanced Deferred Fog" is checked the water mask is always rendered (not only when a water volume is active) to support enhanced deferred fog.
+- Refraction: Synchronized for DX11, Metal and OpenGL Core.
+
+
+## Version 1.07
+
+#### Breaking chances
+- Refraction may look other than before. You will have to check your settings.
+- Far normal settings (Fade and Scale) have changed, so your far normals will most likely be off.
+- Orthographic projection: You have to explicitly enable orthographic support to make it work.
+- Long story short: I entirely rewrote the lighting function which may simply break the rendering of your water materials. But in case you tweak your old settings this version should give you you nicer lit and faster rendered water surfaces ever.
+
+#### Major Changes
+
+### Added
+- Deep water lighting added.
+(https://docs.google.com/document/d/1NDtUpVBgd3UYEI8LRNI4teFF3qm38h-u3Az-ozaaOX0/view#heading=h.xv6ou9wdiuc)
+- More transparent underwater shaders added which support deep water rendering.
+- Split screen support for water volumes added (preview)
+
+### Changed
+- Lighting: Refactored, fixed and optimized.
+- Translucent Lighting: Has been totally reworked. You will have to to tweak translucency color and set up "Intensity (Water)" and "Intensity (Foam)".
+- Underwater Scattering params exposed.
+- Far Normal Fade: Reworked. You may have to readjust the settings.
+- Pixel Snapping: Added MSAA_4x (experimental).
+- Water Mask rendering: Optimized and reduced needed passes from 3 to 2 by using vface.
+
+### Fixed
+- Underwater Post Shader: Fixed Fog depth attenuation density.
+- Underwater Post Shader: Fixed caustics not attenuated by color absorption.
+- Underwater Post Shader: Fixed absorption of reflections and lights above the water surface.
+- Underwater Post Shader: Synchronized color absorption (was exp in water surface shader and exp2 in underwater).
+- Underwater Post Shader: Synchronized caustics animation.
+
+#### Features
+
+### Fixed
+- Caustics: Fixed influence of fog being different in water surface and underwater post shader.
+
+### Changed
+- Caustics: Smoothed normal based blending.
+
+### Changed
+- Foam: Further smoothed foam caps.
+- Foam: Edge foam and foam caps now get combined using max (instead of simply adding them).
+
+### Added
+- Foam: Added "Scale" to deep (or underwater) foam as well as otherwise it might just vanish if "Scale" is high.
+- Foam: Deep (or underwater) foam uses parallax mapping as well.
+
+#### Misc
+
+### Changed
+- UnderwaterParticles Alpha Blended shader: Enhanced underwater fog and absorption.
+- Cleanup: Hid Lux Water post shaders from shader select menu ("Hidden/...")
+
+### Fixed
+- OceanPlane: Added OceanVolume counterpart.
+- WaterPlane_LowTess: Added missing vertex colors.
+- WaterVolume_LowTess: Added missing vertex colors.
+- Metal: VFace issues fixed once more.
+
+
+Version 1.062
+# LuxWater WaterSurface shaders: Basic support for orthographic projection added.
+# Planar reflections: Support for orthographic cameras added.
+# LuxWater WaterSurface shaders: Far normal scale added.
+# Lux Water Volumes: Fixed depth issues when using tessellation.
+# Water Projectors fixed (after pause).
+
+Version 1.061
+# LuxWater WaterSurface shaders: Foam normals fixed.
+# LuxWater WaterSurface shaders: Tangent rotation fixed.
+
+Version 1.06
+# LuxWater WaterSurface shader switched to CG.
+# LuxWater WaterSurface Tessellation shader added.
+# Normal Projectors: Format of normal texture changed to support tessellation and extrusion.
+
+Version 1.051
+# Metal: Missing "CopyDepth" shader added.
+
+Version 1.05
+# Metal: Normals fixed when using "Culling" = "Back" or "Front".
+# Metal: Deferred rendering support added.
+# Scripts added to sample the displacement/current water height as produced by Gerstner Waves.
+# Shader compilation warnings fixed.
+
+Version 1.041
+# Hotfix for running out of interpolators when using Water Projectors.
+
+Version 1.04
+# Preview of Water Projectors added.
+# Fixed underwater not being rendered if blur was disabled.
+# Changed "_Lux_Time" to Time.timeSinceLevelLoad (was Time.time)
+
+Version 1.032
+# Hotfix for non DXT5 normals.
+
+Version 1.031
+# Hotfix for version 1.03 due to renaming issues.
+
+Version 1.03
+# Renamed base water shader to "Lux Water/WaterSurface".
+# Cleaned up directories and naming.
+# Underwater rendering: Fixed missing intensity multiplier for ambient lighting, fixed missing linearization of intensity for ambient and sun lighting.
+# Underwater rendering: Fixed ambient diffuse lighting on foam.
+# Underwater rendering: Fixed caustic tiling not being picked up. 
+# Default caustic texture tweaked.
+
+Version 1.02
+# Gerstner displacement moved to world space.
+# Culling property added.
+# Custom fog added. By default Lux Water supports "Exponential Squared". Other fog modes have to be enabled by editing the shader.
+# Water volumes added (preview)
+
+Version 1.01
+# UV texture mapping added. You may have to enable/disable it to make your materials pick up world space texturing again.
+# Translucent lighting fixed.
+# Foam caps (from gerstner waves) smoothed.
+# Removed doubled edge blending (in lighting function).
+
+Version 1.0
+# Initial release.

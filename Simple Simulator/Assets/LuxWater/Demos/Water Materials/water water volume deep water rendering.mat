@@ -1,0 +1,171 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: water water volume deep water rendering
+  m_Shader: {fileID: 4800000, guid: 585366621acbcfc43805e78785fb85b8, type: 3}
+  m_ShaderKeywords: GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF
+    LUX_WATER_REFLECTIVE _GERSTNERDISPLACEMENT _PIXELSNAP_POINT _SNAPPING _WORLDSPACEMAPPINGENABLED_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 26332f4582e5241cb852e58e42faac31, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CausticTex:
+        m_Texture: {fileID: 2800000, guid: 8e84949c077024a94a7f50a403373768, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LuxWater_ReflectionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 17c5930d7db244afb8decf6ebdc6894b, type: 3}
+        m_Scale: {x: 25.7, y: 36.4}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AbsorbptionDepth: 0.01
+    - _AbsorbptionScale: 1.44
+    - _AbsorbtionColorStrength: 0.98
+    - _AbsorbtionHeight: 0
+    - _AbsorbtionStrength: 1
+    - _AbsorptionColorStrength: 0.9
+    - _AbsorptionDepth: 0.22
+    - _AbsorptionHeight: 0
+    - _AbsorptionMaxHeight: 28
+    - _AbsorptionStrength: 0.5
+    - _BaseUVScale: 0.1
+    - _BumpParallax: 0.3
+    - _CausticMode: 1
+    - _CausticsEnabled: 1
+    - _CausticsMaxDepth: 38
+    - _CausticsScale: 0.85
+    - _CausticsSelfDistortion: 0.2
+    - _CausticsSpeed: 2.5
+    - _CausticsTiling: 0.08
+    - _Culling: 0
+    - _DeepFoamBlur: 2
+    - _DeepFoamCoverage: 1.23
+    - _DeepFoamOpacity: 1
+    - _DeepFoamTiling: 0.237
+    - _Density: 0.11
+    - _DensityDepth: 0.01
+    - _DepthAtten: 2.12
+    - _DetailDistance: 600
+    - _DetailFadeRange: 200
+    - _FinalFogDensity: 0
+    - _FoamCaps: 0.53
+    - _FoamCapsSharpness: 0
+    - _FoamEnabled: 1
+    - _FoamNormalMaskScale: 1.5
+    - _FoamNormalScale: 0.35
+    - _FoamParallax: 0.04
+    - _FoamScale: 7
+    - _FoamSmoothness: 0.3
+    - _FoamSoftIntersectionFactor: 0.14
+    - _FoamSpeed: -2.19
+    - _FoamTiling: 3
+    - _FoamTranslucencyIntensity: 1.2
+    - _FogAbsorptionCancellation: 0.25
+    - _FresbnelFactor: 5
+    - _FresnelPower: 5
+    - _GGlobalFrequency: 1.5
+    - _GGlobalRotation: 0
+    - _GGlobalSpeed: 0.45
+    - _GerstnerElevationFactor: 0.149
+    - _GerstnerEnabled: 1
+    - _GerstnerIntensity: 0.1
+    - _GerstnerNormalIntensity: 2
+    - _GerstnerPlanarNormalIntensity: 0.08
+    - _GerstnerVertexIntensity: 0.2
+    - _GerstnerVerticalIntensity: 0.148
+    - _Glossiness: 0.92
+    - _HeightBasedScatteringMax: 2
+    - _HeightBasedScatteringPower: 2
+    - _Help: 0
+    - _HorizonOcclusion: 0
+    - _InvFade: 0.64
+    - _InvFadeParameter: 0.56
+    - _LuxWater_EdgeLength: 35
+    - _LuxWater_Extrusion: 0.1
+    - _LuxWater_MeshScale: 1
+    - _LuxWater_Phong: 0.5
+    - _LuxWater_ReflectionTexMip: 10
+    - _MaxDirLightDepth: 28
+    - _MaxFogLightDepth: 64
+    - _Metallic: 0
+    - _OrthoDepthCorrection: 0
+    - _OrthoSpport: 0
+    - _PixelSnap: 1
+    - _PixelSnapping: 1
+    - _PlanarEnabled: 0
+    - _PlaneReflectionBumpClamp: 0.05
+    - _PlaneReflectionBumpScale: 0.4
+    - _PlaneReflectionIntensityScale: 1
+    - _ReflectionBumpScale: 0.3
+    - _ReflectionGeoScale: 0.76
+    - _ReflectionGlossiness: 1
+    - _ReflectionSmoothing: 1
+    - _ReflectionStrength: 1
+    - _Refraction: 180
+    - _ScatterOcclusion: 0.02
+    - _ScatteringNormalInfluence: 0.2
+    - _ScatteringPower: 10
+    - _Tess: 1.3
+    - _TranslucencyIntensity: 0.8
+    - _TrnaslucencyIntensity: 4
+    - _UVSpaceMappingEnabled: 0
+    - _UnderwaterFoamParallax: 0.0667
+    - _UnderwaterScatteringIntensity: 1.2
+    - _UnderwaterScatteringPower: 6
+    - _UsesWaterVolume: 1
+    - _WaterIOR: 1.1
+    - _WaterSurfaceYPos: 89
+    - _WorldSpaceMappingEnabled: 1
+    - _ZTest: 4
+    - _ZWrite: 1
+    m_Colors:
+    - _BumpParams: {r: 0.88, g: 0.5, b: 4.1, a: 0.2}
+    - _BumpRotation: {r: 0, g: 12, b: 5, a: 23}
+    - _BumpScale: {r: -1, g: -0.7, b: 0.3, a: 0}
+    - _BumpSpeed: {r: 3, g: -3.04, b: 2.8, a: 0.27}
+    - _BumpSpeedXXX: {r: 1.7, g: 1, b: 0, a: 0}
+    - _BumpTiling: {r: 0.3, g: 0.41, b: 2, a: 0.06}
+    - _Color: {r: 0.3339641, g: 0.42087668, b: 0.52205884, a: 1}
+    - _DeepFoamColor: {r: 0.847, g: 0.847, b: 0.847, a: 0.559}
+    - _DepthAtten: {r: 0, g: 24, b: 0, a: 0}
+    - _FarBumpSampleParams: {r: 0.12, g: 200, b: 0.6, a: 0.15}
+    - _FinalBumpRotation: {r: 2155.8538, g: 3.7999985, b: 118.79876, a: 118.79876}
+    - _FinalBumpSpeed01: {r: 0.745609, g: -0.31649223, b: -0.67236, a: 0.47079155}
+    - _FinalBumpSpeed23: {r: 0.6675084, g: -0.35492057, b: 0, a: 0}
+    - _FoamCapsContrast: {r: 0, g: 1, b: 0, a: 0}
+    - _FoamColor: {r: 0.859, g: 0.859, b: 0.859, a: 0.897}
+    - _GAmplitude: {r: 0.5, g: 0.76, b: 0.63, a: 0.47}
+    - _GDirectionAB: {r: 0.92050487, g: -0.39073113, b: 0.4226182, a: -0.9063078}
+    - _GDirectionCD: {r: 0.87326247, g: 0.48725012, b: 0.9511643, a: -0.308685}
+    - _GFinalFrequency: {r: 0.12, g: 0.2595, b: 0.14355001, a: 0.465}
+    - _GFinalSpeed: {r: -1.3499999, g: 1.053, b: 0.7695, a: 1.5164999}
+    - _GFrequency: {r: 0.08, g: 0.173, b: 0.0957, a: 0.31}
+    - _GRotation: {r: 23, g: 65, b: -29.16, a: 17.98}
+    - _GSpeed: {r: -3, g: 2.34, b: 1.71, a: 3.37}
+    - _GSteepness: {r: 4, g: 3, b: 4, a: 3}
+    - _GerstnerSecondaryWaves: {r: 0, g: 4.3, b: 0.3, a: 1.65}
+    - _GerstnerVertexIntensity: {r: 0.3, g: 0.45, b: 0.3, a: 0}
+    - _SpecColor: {r: 0.0470588, g: 0.0470588, b: 0.0470588, a: 1}
+    - _Speed: {r: 1.23, g: -1.49, b: 0.6, a: 0}
+    - _TranslucencyColor: {r: 0.34775084, g: 0.9589129, b: 0.9852941, a: 1}
+    - _UnderWaterReflCol: {r: 0.6251192, g: 0.75248003, b: 0.79454404, a: 1}
+    - _UpperColor: {r: 0, g: 0, b: 0, a: 1}

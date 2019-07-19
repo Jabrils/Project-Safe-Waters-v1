@@ -1,0 +1,879 @@
+Shader "Lux Water/WaterSurface SurfaceShader deprecated" {
+	Properties {
+
+
+		[Enum(Off,0,On,1)]_ZWrite 		("ZWrite", Float) = 1.0
+		[Enum(UnityEngine.Rendering.CullMode)] _Culling ("Culling", Float) = 0
+
+		[Space(5)]
+		[Toggle(EFFECT_BUMP)]
+		_UVSpaceMappingEnabled			("UV Space Texture Mapping", Float) = 0
+
+		[Space(5)]
+		[Toggle(USINGWATERVOLUME)]		
+		_UsesWaterVolume				("Uses Water Volume", Float) = 0
+		_WaterSurfaceYPos				("    Water Surface Position (Y)", Float) = 0
+
+		[Header(Basic Properties)]
+		_Glossiness 					("    Smoothness", Range(0,1)) = 0.92
+		_SpecColor						("    Specular", Color) = (0.15,0.15,0.15)
+		[Space(5)]
+		_InvFade 						("    Edge Blend Factor", Range(0.001, 6)) = 1
+
+
+		[Header(Reflections)]
+		[Toggle(GEOM_TYPE_MESH)]
+		_PlanarEnabled 					("    Enable Planar Reflections", Float) = 0
+		[HideInInspector]_LuxWater_ReflectionTex("ReflectionTex", 2D) = "gray" {}
+		[Space(5)]
+		_FresnelPower					("    Fresnel Power", Range(1,5)) = 5
+		_ReflectionStrength 			("    Strength", Range(0,1)) = 1
+		_ReflectionGlossiness 			("    Smoothness", Range(0,1)) = 1
+		_ReflectionBumpScale 			("    Bump Scale", Range(0,1)) = 0.3
+		[Space(5)]
+		_WaterIOR 						("    Underwater IOR", Range(1.1,1.4)) = 1.3333
+		_UnderWaterReflCol 				("    Underwater Reflection Tint", Color) = (1,1,1,0)
+
+
+		[Header(Underwater Fog)]
+		_Color 							("    Fog Color", Color) = (1,1,1,1)
+		[LuxWaterVectorThreeDrawer]
+		_DepthAtten						("    - Depth: Fade Start (X) Fade Range (Y) Density (Z)", Vector) = (0, 32, 1, 0)
+		
+		[PowerSlider(3.0)] _Density 	("    - View Depth", Range(0.0,4)) = 0.1
+		_FogAbsorptionCancellation 		("    Absorption Cancellation", Range(0.0,1)) = 1	
+
+		[Header(Light Absorption)]
+		[Space(4)]
+		_AbsorptionStrength				("    Strength", Range(0,1)) = 1
+		_AbsorptionHeight				("    - Depth", Range(0.0,8)) = 1
+		_AbsorptionMaxHeight			("    - Max Depth", Float) = 60
+		_AbsorptionDepth 				("    - View Depth", Range(0,0.2)) = 0.07
+		_AbsorptionColorStrength		("    Color Absorption", Range(0,1)) = 0.5
+		
+		[Header(Translucent Lighting)]
+		_TranslucencyColor				("    Translucency Color", color) = (0.1,0.2,0.3,0)
+		_ScatteringPower				("    Scattering Power", Range(0.1, 10.0)) = 5
+
+		[Header(Normals)]
+		[NoScaleOffset] _BumpMap 		("    Normal Map", 2D) = "bump" {}
+
+		[Header(    Far Normal)]
+		[LuxWaterVectorTwoDrawer]
+		_FarBumpSampleParams 			("    Tiling (X) Fade (Y)", Vector) = (0.25, 0.01, 0, 0)
+
+		[Header(    Detail Normals)]
+		[LuxWaterVectorThreeDrawer]
+		_BumpScale   					("    Scale", Vector) = (1, 0.5, 0.25, 0)
+		[LuxWaterVectorFourGFDrawer]
+		_BumpTiling	 					("    Tiling", Vector) = (1, 0.5, 0.478, 0.1)
+		[LuxWaterVectorFourGFDrawer]
+		_BumpSpeed 	 					("    Speed", Vector) = (1.7, 1.0, 0, 1.0)
+		[LuxWaterVectorFourGFDrawer]
+		_BumpRotation	 				("    Rotation", Vector) = (0, 8.0, 32.0, 0)
+
+	//	Combined Speed and Rotation Values
+		[HideInInspector]_FinalBumpSpeed01("    Final BumpSpeed01", Vector) = (0, 0, 0, 0)
+		[HideInInspector]_FinalBumpSpeed23("    Final BumpSpeed23", Vector) = (0, 0, 0, 0)
+		[Space(5)]
+		_Refraction  					("    Refraction", Range(0,1024)) = 512
+
+		[Header(Foam)]
+		[Toggle(GEOM_TYPE_BRANCH_DETAIL)] _FoamEnabled ("    Enable Foam", Float) = 1
+		[NoScaleOffset]_MainTex 		("    Normal (RGB) Mask (A)", 2D) = "white" {}
+		_FoamTiling 					("    Tiling", Float) = .1
+		[Space(5)]
+		_FoamColor						("    Color (RGB) Opacity (A)", color) = (0.7, 0.7, 0.7, 0.8)
+		_FoamScale 						("    Scale", Range(0, 40)) = 20
+		_FoamSpeed 	 					("    Speed", Float) = 0.9
+		_FoamParallax 					("    Parallax", Range(0.0, 1)) = .35
+		_FoamNormalScale 				("    Normal Scale", Float) = 1
+		_FoamSoftIntersectionFactor		("    Edge Blend Factor", Range(0.0, 3)) = 1
+
+		[Header(Caustics)]
+		[Toggle(GEOM_TYPE_FROND)]
+		_CausticsEnabled 				("    Enable Caustics", Float) = 1
+		[Toggle(GEOM_TYPE_LEAF)]
+		_CausticMode 					("    Normals from GBuffer", Float) = 1
+		[NoScaleOffset] _CausticTex 	("    Caustics (R) Noise (GB)", 2D) = "black" {}
+		_CausticsTiling 				("    Tiling", Float) = .1
+		[Space(5)]
+		_CausticsScale 					("    Scale", Range(0, 8)) = 2
+		_CausticsSpeed 	 				("    Speed", Float) = 0.9
+		_CausticsSelfDistortion 		("    Distortion", Float) = 0.2
+
+		[Header(Advanced Options)]
+		[Toggle(GEOM_TYPE_BRANCH)]
+		_PixelSnap						("    Enable Pixel Snapping", Float) = 0
+		
+		[Header(Gerstner Waves)]
+		[Toggle(_GERSTNERDISPLACEMENT)]
+		_GerstnerEnabled 				("    Enable Gerstner Waves", Float) = 0
+				
+		[Space(5)]
+		[LuxWaterVectorFourDrawer]
+		_GAmplitude 					("    Amplitude", Vector) = (0.3 ,0.35, 0.25, 0.25)
+		[Space(24)]
+		
+		[LuxWaterVectorFourDrawer]
+		_GFrequency 					("    Frequency", Vector) = (1.3, 1.35, 1.25, 1.25)
+		[LuxWaterGFDrawer]
+		_GGlobalFrequency	 			("        Global Factor", Float) = 1.0
+		[HideInInspector]
+		_GFinalFrequency 				("    Final Frequency", Vector) = (1.3, 1.35, 1.25, 1.25)
+		
+		[LuxWaterVectorFourDrawer]
+		_GSteepness 					("    Steepness", Vector) = (1.0, 1.0, 1.0, 1.0)
+		[Space(24)]
+
+		[LuxWaterVectorFourDrawer]
+		_GSpeed 						("    Speed", Vector) = (1.2, 1.375, 1.1, 1.5)
+		[LuxWaterGFDrawer]_GGlobalSpeed ("        Global Factor", Float) = 1.0
+		[HideInInspector]_GFinalSpeed	("    Final Speed", Vector) = (1.2, 1.375, 1.1, 1.5)
+
+		[LuxWaterVectorFourDrawer]
+		_GRotation	 					("    Rotation", Vector) = (0, 8.0, 32.0, 0)
+		[LuxWaterGFDrawer]
+		_GGlobalRotation	 			("        Global Factor", Float) = 0
+		[HideInInspector]_GDirectionAB 	("    	  Direction AB", Vector) = (0.3 ,0.85, 0.85, 0.25)
+		[HideInInspector]_GDirectionCD 	("        Direction CD", Vector) = (0.1 ,0.9, 0.5, 0.5)
+
+		[Space(5)]
+		[LuxWaterVectorThreeDrawer]
+		_GerstnerVertexIntensity 		("    Final Displacement", Vector) = (1.0,1.0,1.0,0.0)
+
+		[Space(5)]
+		_GerstnerNormalIntensity 		("    Normal Scale", Range(0,1)) = 0.05
+		//_GerstnerVerticalIntensity 		("    Vertical Displacement", Range(0,1)) = 0.05
+		_FoamCaps 						("    Foam Caps", Range(0,4)) = 0.5
+
+		
+	}
+	SubShader {
+		Tags {"Queue"="Transparent-1" "RenderType"="Opaque" "ForceNoShadowCasting" = "True"}
+		LOD 200
+
+	//	Metal: We have to explicitly set ZWrite Off – only if camera uses deferred rendering
+	//	But then we can not have multiple overlapping volumes – on no 2 pass shader ... :(
+	//	Let's use VFACE instead
+		ZWrite [_ZWrite]
+		ZTest LEqual
+		Cull [_Culling]
+		Blend SrcAlpha OneMinusSrcAlpha
+
+		GrabPass{ "_GrabTexture" }		
+
+		CGPROGRAM
+		#pragma surface surf StandardSpecularLuxWater vertex:vert   novertexlights   nometa   keepalpha   nolightmap   addshadow   nofog
+		#pragma target 3.0
+
+		#pragma exclude_renderers d3d9 d3d11_9x
+
+	//	Fog Mode
+		// #define FOG_LINEAR
+		// #define FOG_EXP
+		#define FOG_EXP2
+
+	//	Metal deffered support
+		//#define LUXWATERMETALDEFERRED
+
+	//	Water projector support
+//		#pragma multi_compile __ USINGWATERPROJECTORS
+	//	Water volume support
+		#pragma multi_compile __ USINGWATERVOLUME
+	//	In order to safe keywords we use speedtree's keywords
+	//	Planar reflections
+//		#pragma multi_compile __ GEOM_TYPE_MESH
+	//	Foam
+		#pragma shader_feature GEOM_TYPE_BRANCH_DETAIL
+	//	Caustics
+		#pragma shader_feature GEOM_TYPE_FROND
+	//	Caustic Normal Mode
+		#pragma shader_feature GEOM_TYPE_LEAF
+	//	Gerstner Waves
+		#pragma shader_feature _GERSTNERDISPLACEMENT
+	//	Snapping
+//		#pragma shader_feature GEOM_TYPE_BRANCH
+	//	Texture Mapping
+//		#pragma shader_feature EFFECT_BUMP
+		
+		#include "Includes/LuxWater_PBSLighting.cginc"
+		
+// To make it still compile...
+		#if defined(SHADER_API_METAL) && defined(LUXWATERMETALDEFERRED)
+			sampler2D _Lux_GrabbedDepth;
+			float4 _Lux_GrabbedDepth_TexelSize;
+		#else
+			UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
+			float4 _CameraDepthTexture_TexelSize;
+		#endif
+
+
+		sampler2D _MainTex;
+
+	//	Normal maps
+		float2 _FarBumpSampleParams;
+		float4 _BumpTiling;
+		float4 _BumpScale;
+		float4 _FinalBumpSpeed01;
+		float2 _FinalBumpSpeed23;
+
+		struct appdata_water {
+			float4 vertex : POSITION;
+			float4 tangent : TANGENT;
+		    float3 normal : NORMAL;
+		    //float4 texcoord : TEXCOORD0;
+		    fixed4 color : COLOR;
+		    UNITY_VERTEX_INPUT_INSTANCE_ID
+		};
+
+
+		struct Input {
+			float4 BumpUVs;
+			float4 grabUV;
+			float4 ViewRay_WaterYpos;
+			
+			#if defined(USINGWATERPROJECTORS)
+				float4 projectorScreenPos;
+			#else
+				float4 BumpSmallAndFoamUVs;
+			#endif
+
+			fixed4 color : COLOR0;
+
+			float facingSign : VFACE;
+			float3 viewDir;
+			float3 worldNormal;
+			float3 worldPos;
+			INTERNAL_DATA
+		};
+
+
+		uniform float _WaterSurfaceYPos;
+
+	//	Gerstner Waves
+		float3 _GerstnerVertexIntensity;
+		float _GerstnerNormalIntensity;
+		//float _GerstnerVerticalIntensity;
+	 	uniform float4 _GAmplitude;
+	    uniform float4 _GFinalFrequency;
+	    uniform float4 _GSteepness;
+	    uniform float4 _GFinalSpeed;
+	    uniform float4 _GDirectionAB;
+	    uniform float4 _GDirectionCD;
+
+	    #include "Includes/LuxWater_Utils.cginc"
+	    #include "Includes/LuxWater_GerstnerWaves.cginc"
+
+		void vert(inout appdata_full v, out Input o) {
+			UNITY_INITIALIZE_OUTPUT(Input, o);
+
+		//	Calculate wpos up front as we need it anyway and it allows us to optimize other calculations
+			float4 wpos = mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1.0));
+
+		//	In case we use water projector and gerstnerwaves we need the undistored screenUVs
+			#if defined(USINGWATERPROJECTORS) && defined(_GERSTNERDISPLACEMENT)
+				float4 hposOrig = mul(UNITY_MATRIX_VP, wpos);
+				o.projectorScreenPos = ComputeScreenPos(hposOrig);
+			#endif
+			
+			#if defined(EFFECT_BUMP)
+			//	uv
+				float2 BaseUVs = v.texcoord.xy * _BumpTiling.w;
+			#else
+			//	world space texure mapping
+				float2 BaseUVs = wpos.xz * _BumpTiling.w;
+			#endif
+
+
+			#if defined(_GERSTNERDISPLACEMENT)
+				half3 vtxForAni = (wpos).xzz;
+				half3 nrml;
+				half3 offsets;
+				Gerstner (
+					offsets, nrml, v.vertex.xyz, vtxForAni,						// offsets, nrml will be written
+					_GAmplitude,												// amplitude
+					_GFinalFrequency,											// frequency
+					_GSteepness,												// steepness
+					_GFinalSpeed,												// speed
+					_GDirectionAB,												// direction # 1, 2
+					_GDirectionCD												// direction # 3, 4
+				);
+
+				//v.vertex.xyz += offsets; // * _GerstnerIntensity;
+				v.normal = nrml;
+
+			//	Actually not doing anything with the tangent looks most like water...	
+
+			//	Estimate the tangent
+/*				v.tangent.xyz = cross(v.normal, float3(0,0,1));
+    			v.tangent.w = -1;
+*/
+
+    		// 	A general tangent estimation	
+/*				float3 T1 = float3(1, 0, 1);
+				float3 Bi = cross(T1, v.normal);
+				float3 newTangent = cross(v.normal, Bi);
+				normalize(newTangent);
+				v.tangent.xyz = newTangent.xyz;
+				w should be fine
+				
+				if (dot(cross(v.normal,newTangent),Bi) < 0)
+					v.tangent.w = -1.0f;
+				else
+					v.tangent.w = 1.0f;
+*/
+			
+			//	version 1.01: power 3 skipped, new factor
+				float foam = offsets.y /* * offsets.y * offsets.y */ + (abs(offsets.x) + abs(offsets.z)) * 0.1875; // * 0.125;
+			//	version 1.01: smoothstep added
+				v.color.a = smoothstep(0.0, 1.0, saturate(foam));
+			//	version 1.02: Apply Gerstner dispalcement in world space
+				wpos.xyz += offsets * v.color.r;
+				v.vertex = mul(unity_WorldToObject, wpos);
+
+			//	Debug - will be skipped by the compiler
+				//v.color.rgb = COMPUTE_VIEW_NORMAL * 0.5 + 0.5;
+				//v.color.rgb = mul((float3x3)UNITY_MATRIX_MVP, v.normal);
+
+			#endif
+
+		//	Calculate ClipPos (optimized)
+			float4 hpos = mul(UNITY_MATRIX_VP, wpos);
+		//	Get Grab UVs
+			o.grabUV = ComputeGrabScreenPos(hpos); // grabUV.w = hpos.w = eyedepth
+		//	Calculate ViewRay by transforming WorldPos to ViewPos (optimized)
+			o.ViewRay_WaterYpos.xyz = mul(UNITY_MATRIX_V, wpos).xyz * float3(-1, -1, 1);
+		//	Store wpos.y of watersurface
+			o.ViewRay_WaterYpos.w = wpos.y;
+
+		//	UVs
+			#if !defined(USINGWATERPROJECTORS)
+				o.BumpUVs.xy = BaseUVs * _BumpTiling.x + _Time.xx * _FinalBumpSpeed01.xy;
+				o.BumpUVs.zw = BaseUVs * _BumpTiling.y + _Time.xx * _FinalBumpSpeed01.zw;
+				o.BumpSmallAndFoamUVs.xy = BaseUVs * _BumpTiling.z + _Time.xx * _FinalBumpSpeed23.xy;
+			#else
+				o.BumpUVs.xy = BaseUVs;
+			#endif
+			
+		}
+
+
+	//	Basic Properties
+		half _Glossiness;
+		half _InvFade;
+
+	//	Reflections
+		half _ReflectionBumpScale;
+		half _ReflectionGlossiness;
+
+	//	Planar reflections
+		#if defined(GEOM_TYPE_MESH)
+			sampler2D _LuxWater_ReflectionTex;
+			half _LuxWater_ReflectionTexMip;
+			float4 _LuxWater_ReflectionTex_TexelSize;
+		#endif
+
+	// 	Underwater Fog
+		fixed4 _Color;
+		half3 _DepthAtten;
+		half _Density;
+		half _FinalFogDensity;
+		half _FogAbsorptionCancellation;
+
+	//	Absorption
+		half _AbsorptionHeight;
+		half _AbsorptionMaxHeight;
+		float _AbsorptionDepth;
+		fixed _AbsorptionColorStrength;
+		fixed _AbsorptionStrength;
+
+	//	Normals
+		sampler2D _BumpMap;
+		half _Refraction;
+
+	//	Foam
+		fixed4 	_FoamColor;
+		half 	_FoamScale;
+		float 	_FoamSpeed;
+		half 	_FoamParallax;
+		half 	_FoamSoftIntersectionFactor;
+		float 	_FoamTiling;
+		float   _FoamNormalScale;
+
+		half _FoamCaps;
+
+	//	Caustics
+		sampler2D _CausticTex;
+		#if defined(GEOM_TYPE_LEAF)
+			sampler2D _CameraGBufferTexture2; //Deferred Normals
+		#endif
+		half _CausticsScale;
+		half _CausticsSpeed;
+		half _CausticsTiling;
+		half _CausticsSelfDistortion;
+
+	//	Water projectors
+		#if defined(USINGWATERPROJECTORS)
+			sampler2D _LuxWater_FoamOverlay;
+			sampler2D _LuxWater_NormalOverlay;
+		#endif
+
+	//	Metal fix
+		#if defined(SHADER_API_METAL)
+			float _Culling;
+		#endif
+
+	//  Translucency (in lighting function)
+		//half _ScatteringPower;
+		//half3 _TranslucencyColor;
+
+		sampler2D _GrabTexture;
+		float4 _GrabTexture_TexelSize;		
+		
+
+		void surf (Input IN, inout SurfaceOutputStandardSpecularLuxWater o) {
+
+			#define surfaceEyeDepth IN.grabUV.w
+
+			float3 viewDir = normalize(IN.viewDir);
+			fixed4 c = _Color;
+
+		//	-----------------------------------------------------------------------
+		//	Water Projectors: Get screen UVs and vignette	
+			#if defined(USINGWATERPROJECTORS) 
+				float2 projectionUVs;
+				#if defined(_GERSTNERDISPLACEMENT)
+					projectionUVs = IN.projectorScreenPos.xy / IN.projectorScreenPos.w;
+
+					float2 strength = abs(projectionUVs - 0.5); // 0 - 0.5 range
+					strength = saturate ((float2(0.5, 0.5) - strength) * 2);
+					float vignette = min(strength.x, strength.y);
+					vignette = saturate(vignette * 4); // sharpen
+				#else
+					projectionUVs = IN.grabUV.xy / IN.grabUV.w;
+				#endif
+			#endif
+
+		//	-----------------------------------------------------------------------
+		//	Init smoothness which will be tweaked later on
+			o.Smoothness = _Glossiness;
+			o.ReflectionSmoothness = _ReflectionGlossiness;
+
+			o.Specular = _SpecColor;
+
+		//	-----------------------------------------------------------------------
+		//	Animate and blend normals
+
+		//	Sample and blend far and 1st detail normal
+
+			#if defined(USINGWATERPROJECTORS)
+				float4 BumpUVs;
+				BumpUVs.xy = IN.BumpUVs.xy * _BumpTiling.x + _Time.xx * _FinalBumpSpeed01.xy;
+				BumpUVs.zw = IN.BumpUVs.xy * _BumpTiling.y + _Time.xx * _FinalBumpSpeed01.zw;
+				float2 BumpSmallAndFoamUVs = IN.BumpUVs.xy * _BumpTiling.z + _Time.xx * _FinalBumpSpeed23.xy;
+			#else
+				float4 BumpUVs = IN.BumpUVs;
+				float2 BumpSmallAndFoamUVs = IN.BumpSmallAndFoamUVs.xy;
+			#endif
+
+
+			fixed4 farSample = tex2D(_BumpMap, BumpUVs.xy * _FarBumpSampleParams.x + _Time.x * _FinalBumpSpeed01.xy * _FarBumpSampleParams.x);
+			fixed4 normalSample = tex2D(_BumpMap, BumpUVs.xy + (farSample.ag * 2.0 - 1.0 ) * 0.05 );
+			normalSample = lerp( normalSample, farSample, saturate(surfaceEyeDepth * _FarBumpSampleParams.y) );
+
+			half3 refractNormal;
+			#if defined(UNITY_NO_DXT5nm)
+				refractNormal = (normalSample.rgb * 2 - 1) * _BumpScale.x;
+			#else
+				refractNormal = (normalSample.agg * 2 - 1) * _BumpScale.x;
+			#endif
+		//	refracted 2nd detail normal sample
+			fixed4 normalSampleSmall = tex2D(_BumpMap, BumpUVs.zw + refractNormal.xy * 0.05 );
+		//	3rd detail normal sample
+			fixed4 normalSampleSmallest = tex2D(_BumpMap, BumpSmallAndFoamUVs);
+			o.Normal = UnpackAndBlendNormals (refractNormal, normalSampleSmall, normalSampleSmallest);
+
+
+		//	-----------------------------------------------------------------------
+		//	Normal Projectors
+			#if defined (USINGWATERPROJECTORS)
+
+				fixed4 projectedNormal = tex2D(_LuxWater_NormalOverlay, projectionUVs);
+				// Using regular ARGB rt
+				// fixed3 pNormal = projectedNormal.rgb * 2 - 1;
+				// Using ARGBHalf and additibve blending
+				fixed3 pNormal = projectedNormal.rgb;
+				// pNormal.xy *= -1; // proper tangent space - moved to normal projector shader
+				pNormal = lerp( half3(0,0,1), pNormal, projectedNormal.a
+					#if defined(_GERSTNERDISPLACEMENT)
+						* vignette
+					#endif
+				);
+				//o.ProjectedNormal = half4( pow(projectedNormal.rgb, 1.0 / 2.2) * 2 - 1, projectedNormal.a);
+				o.Normal = normalize(half3(o.Normal.xy + pNormal.xy, o.Normal.z*pNormal.z));
+			#endif
+
+
+		//	-----------------------------------------------------------------------
+		//	Handle Backface Rendering
+		//	Metal has inversed facingSign which is not handled by Unity?
+			#if defined(SHADER_API_METAL)
+				float fsign = (_Culling == 0) ? -1 : 1;
+				o.FacingSign = fsign * IN.facingSign;
+			#else
+				o.FacingSign = IN.facingSign;
+			#endif
+			o.Normal *= o.FacingSign;
+
+			float3 worldNormal = WorldNormalVector(IN, o.Normal);
+			half3 wNormal = WorldNormalVector(IN, float3(0, 0, o.FacingSign));
+
+			float3 worldViewDir = normalize (IN.worldPos - _WorldSpaceCameraPos.xyz);
+
+		//	-----------------------------------------------------------------------
+		//	Edgeblendfactor	- in view space	 
+		//  This does not work on metal if we are using deferred rendering and enable ZWrite... - > force DepthNormalTexture?
+			
+			#if defined(SHADER_API_METAL) && defined(LUXWATERMETALDEFERRED)
+				half origDepth = tex2Dproj(_Lux_GrabbedDepth, UNITY_PROJ_COORD(IN.grabUV)).r;
+			#else
+				half origDepth = SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(IN.grabUV));
+			#endif
+			
+			float sceneDepth = LinearEyeDepth(origDepth);
+			float edgeBlendFactor = saturate (_InvFade * (sceneDepth - surfaceEyeDepth));
+			float origEdgeBlendFactor = edgeBlendFactor;		
+
+		//	-----------------------------------------------------------------------
+		//	Refraction - calculate distorted grab UVs	
+		//	Calculate fade factor for refraction according to depth
+			float perspectiveFadeFactor = IN.grabUV.z; // Works on metal and dx11 but not opengl
+			#if defined(UNITY_REVERSED_Z)			
+				perspectiveFadeFactor = 1.0 - perspectiveFadeFactor;
+			#else
+				#if defined (SHADER_API_GLCORE) || defined (SHADER_API_D3D9)
+					perspectiveFadeFactor = 1.0 - perspectiveFadeFactor * _ProjectionParams.w;
+				#endif
+			#endif
+
+			float2 offsetFactor = _GrabTexture_TexelSize.xy * _Refraction * perspectiveFadeFactor * edgeBlendFactor;
+			
+			float2 offset = worldNormal.xz * offsetFactor;
+			float4 distortedGrabUVs = IN.grabUV;
+			distortedGrabUVs.xy += offset;
+
+		//	Snap distortedGrabUVs to pixels as otherwise the depth texture lookup will return
+		//	a false depth which leads to a 1 pixel error (caused by fog and absorption) at high depth and color discontinuities (e.g. ship above ground).
+			float2 snappedDistortedGrabUVs = distortedGrabUVs.xy / distortedGrabUVs.w;
+			#if defined(GEOM_TYPE_BRANCH)
+			//	Casting to int and float actually looks better than using round
+			//	snappedDistortedGrabUVs =  (float2)((int2)(snappedDistortedGrabUVs * _GrabTexture_TexelSize.zw + float2(1, 1))) - float2(0.5, 0.5); 
+			//	snappedDistortedGrabUVs *= _GrabTexture_TexelSize.xy;
+
+		//	As proposed by bgolus:
+				snappedDistortedGrabUVs = (floor(snappedDistortedGrabUVs * _GrabTexture_TexelSize.zw) + 0.5) / _GrabTexture_TexelSize.zw;
+			#endif
+
+		
+		//	-----------------------------------------------------------------------
+		//	Do not grab pixels from foreground 
+			//float refractedRawDepth = SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(distortedGrabUVs));
+
+			#if defined(SHADER_API_METAL) && defined(LUXWATERMETALDEFERRED)
+				float refractedRawDepth = tex2Dlod(_Lux_GrabbedDepth, float4(snappedDistortedGrabUVs, 0, 0) ).r;
+			#else
+				float refractedRawDepth = SAMPLE_DEPTH_TEXTURE_LOD(_CameraDepthTexture, float4(snappedDistortedGrabUVs, 0, 0));
+			#endif
+			
+			float refractedSceneEyeDepth = LinearEyeDepth(refractedRawDepth);
+			if ( refractedSceneEyeDepth < surfaceEyeDepth ) {
+				distortedGrabUVs = IN.grabUV;
+				refractedRawDepth = origDepth;
+				snappedDistortedGrabUVs = IN.grabUV/IN.grabUV.w; 
+			}
+		//  Get final scene 01 and eye depth
+			refractedSceneEyeDepth = LinearEyeDepth(refractedRawDepth);
+			float refractedScene01Depth = Linear01Depth (refractedRawDepth);
+
+			float viewDepth = refractedSceneEyeDepth - surfaceEyeDepth;
+
+		//	Adjust edgeBlendFactor according to the final refracted depth sample
+			edgeBlendFactor = saturate (_InvFade * viewDepth );
+
+			o.Refraction.a = 0;	// no fog – breaks on dx11, so it is added at the bottom
+			o.Absorption = 1;	// no absorption
+			o.Caustics = 0;
+
+		//	-----------------------------------------------------------------------
+		//	Fog and Absorption
+		
+		//	Reconstruct world position of refracted pixel
+			float3 ray = IN.ViewRay_WaterYpos.xyz;
+			ray = ray * (_ProjectionParams.z / ray.z);
+		//	This is only an estimation as the view vector is not correct
+		    float4 vpos = float4(ray * refractedScene01Depth,1);
+		    float3 wpos = mul (unity_CameraToWorld, vpos).xyz;
+		    
+#if defined(USINGWATERVOLUME)
+	#define waterYPos _WaterSurfaceYPos
+#else
+	#define waterYPos IN.ViewRay_WaterYpos.w
+#endif
+
+		//  for foam / caustics in forward
+			float4 vposUnrefracted = float4(ray * Linear01Depth(origDepth) ,1);
+			float3 wposUnrefracted = mul (unity_CameraToWorld, vposUnrefracted).xyz;
+
+		//	Calculate Depth Attenuation based on world position and water y
+			float depthAtten = saturate( (waterYPos - wpos.y - _DepthAtten.x) / (_DepthAtten.y) );
+			depthAtten = saturate( 1.0 - exp( -depthAtten * 8.0 )  ) * saturate(_DepthAtten.z);
+
+		//	Backside rendering
+			if (o.FacingSign < 0.0f) {
+				viewDepth = surfaceEyeDepth; //(viewDepth < surfaceEyeDepth) ? surfaceEyeDepth : viewDepth ;
+			}
+		
+		//	Calculate Attenuation along viewDirection
+			float viewAtten = saturate( 1.0 - exp( -viewDepth * _Density) );
+
+		//	Store final fog density
+			o.Refraction.a = max(depthAtten, viewAtten);
+
+		//	Absorption	
+			float3 ColorAbsortion = float3(0.45f, 0.029f, 0.018f);
+			
+		//	Calculate Depth Attenuation
+			float depthBelowSurface = saturate( (waterYPos - wpos.y)  / _AbsorptionMaxHeight);
+			depthBelowSurface = exp2(-depthBelowSurface * depthBelowSurface * _AbsorptionHeight);
+
+		//	Calculate Attenuation along viewDirection
+			float d = exp( -viewDepth * _AbsorptionDepth );
+		//	Combine and apply strength
+			d = lerp (1, saturate( d * depthBelowSurface), _AbsorptionStrength );
+
+		//	Cancel absorption by fog
+			d = saturate(d + o.Refraction.a * _FogAbsorptionCancellation);
+
+		//	Add color absorption
+			ColorAbsortion = lerp( d, -ColorAbsortion, _AbsorptionColorStrength * (1.0 - d));    
+			o.Absorption = saturate(ColorAbsortion);
+
+
+		//	-----------------------------------------------------------------------
+		//	Front face rendering only
+		
+		#if defined(SHADER_D3D11) || defined(SHADER_XBOXONE) || defined(SHADER_VULKAN) || defined(SHADER_API_GLCORE) || defined(SHADER_API_METAL)
+			UNITY_BRANCH
+			if (o.FacingSign > 0.0f) {
+		#endif
+
+				//	-----------------------------------------------------------------------
+				//	Caustics
+					#if defined(GEOM_TYPE_FROND)
+						float CausticsTime = _Time.x * _CausticsSpeed;
+
+						#if defined(GEOM_TYPE_LEAF)
+							half3 gNormal = tex2Dproj(_CameraGBufferTexture2, UNITY_PROJ_COORD(distortedGrabUVs)).rgb;
+							gNormal = gNormal * 2 - 1;
+						#else
+							half3 gNormal = normalize(cross(ddx(wposUnrefracted), ddy(wposUnrefracted))); // this produces gaps
+							//half3 gNormal = normalize(cross(ddx(wpos), ddy(wpos))); // This of course would be correct but shows up crazy discontinueties.
+							gNormal.y = -gNormal.y;
+						#endif
+
+						float2 cTexUV = wpos.xz * _CausticsTiling		+ offset;
+						float2 mainDir = _FinalBumpSpeed01.xy;
+					//	Make caustics distort themselves by adding gb
+						fixed4 causticsSample = tex2D(_CausticTex, cTexUV + CausticsTime.xx * mainDir);
+						causticsSample += tex2D(_CausticTex, cTexUV * 0.78 + float2(-CausticsTime, -CausticsTime * 0.87) * mainDir + causticsSample.gb * _CausticsSelfDistortion );
+						causticsSample += tex2D(_CausticTex, cTexUV * 1.13 + float2(CausticsTime, 0.36) * mainDir - causticsSample.gb * _CausticsSelfDistortion );
+
+						//causticsSample = tex2D(_CausticTex, cTexUV + CausticsTime.xx * mainDir);
+						//fixed4 causticsSample1 = tex2D(_CausticTex, cTexUV * 0.78 + float2(-CausticsTime, -CausticsTime * 0.87) * mainDir + causticsSample.gb*0.2 );
+						//causticsSample = tex2D(_CausticTex, cTexUV + CausticsTime.xx * mainDir + float2(causticsSample.g, causticsSample1.b) * 0.1);
+
+						o.Caustics = causticsSample.r * saturate( (gNormal.y - 0.125) * 2);
+						o.Caustics *= _CausticsScale * edgeBlendFactor * edgeBlendFactor; 
+					#endif
+
+			#if defined(SHADER_D3D11) || defined(SHADER_XBOXONE) || defined(SHADER_VULKAN) || defined(SHADER_API_GLCORE) || defined(SHADER_API_METAL)
+				}
+			#endif
+		//	End of front face rendering only
+		//	-----------------------------------------------------------------------
+
+			#if defined (UNITY_PASS_FORWARDBASE)
+				//o.Refraction.rgb = tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(distortedGrabUVs) ).rgb;
+				o.Refraction.rgb = tex2Dlod(_GrabTexture, float4(snappedDistortedGrabUVs,0,0) ).rgb;
+			#else
+				o.Refraction.rgb = 0;
+			#endif
+
+
+		//	-----------------------------------------------------------------------
+		//	Simple subsurface scattering approximation
+			o.Translucency = 1;
+			//o.TranslucencyColor = _TranslucencyColor;
+			//o.ScatteringPower = _ScatteringPower;
+
+
+		//	-----------------------------------------------------------------------
+		//	Foam
+			#if defined(GEOM_TYPE_BRANCH_DETAIL)
+				half FoamSoftIntersectionFactor = .75;
+
+				float height = _FoamParallax * worldNormal.z;
+
+			//	Compute parallax offset based on texture mapping
+				#if defined(EFFECT_BUMP)
+					float2 parallaxOffset = normalize(IN.viewDir.xy) * height;
+				#else
+					float2 parallaxOffset = worldViewDir.xz * height;
+				#endif
+
+			//	float2 foamUVS = IN.worldPos.xz * _FoamTiling + _Time.xx * _FinalBumpSpeed01.xy * _FoamSpeed + worldNormal.xz*0.05 + parallaxOffset;
+			//	We want the distortion from the Gerstner waves, so we have to use IN.BumpUVs
+				float2 foamUVS = IN.BumpUVs.xy * _FoamTiling + _Time.xx * _FoamSpeed * _FinalBumpSpeed01.xy  + parallaxOffset;
+				
+				half4 rawFoamSample = tex2D(_MainTex, foamUVS );
+				half FoamSample = 1; //(rawFoamSample.a * _FoamScale);
+
+				half FoamThreshold = o.Normal.z * 2 - 1;
+
+			// 	SceneDepth looks totally boring...
+			 	//half FoamSoftIntersection = saturate( _FoamSoftIntersectionFactor * (min(sceneDepth,refractedSceneEyeDepth) - surfaceEyeDepth ) );
+				half FoamSoftIntersection = saturate( _FoamSoftIntersectionFactor * (refractedSceneEyeDepth - surfaceEyeDepth ) ); 
+
+				//	This introduces ghosting:
+			 	//	FoamSoftIntersection = min(FoamSoftIntersection, saturate( _FoamSoftIntersectionFactor *   (waterYPos - wposUnrefracted.y) ) );
+			 	//	This does not really help:
+			 	//	FoamSoftIntersection = min(FoamSoftIntersection, saturate( _FoamSoftIntersectionFactor *   (waterYPos - wpos.y) ) );
+
+			//	Get shoreline foam mask
+				float shorelineFoam = saturate(-FoamSoftIntersection * (1 + FoamThreshold.x) + 1 );
+				shorelineFoam = shorelineFoam * saturate(FoamSoftIntersection - FoamSoftIntersection * FoamSoftIntersection );
+				FoamSample *= shorelineFoam;
+
+			//	Get foam caps
+				half underWaterFoam = 0;
+				#if defined(_GERSTNERDISPLACEMENT)
+					float foamCaps = IN.color.a;
+					foamCaps = saturate(foamCaps * _FoamCaps);
+					foamCaps *= foamCaps;
+					FoamSample += foamCaps;
+
+					half4 underwaterFoamSample = tex2D(_MainTex, foamUVS * 0.637 );
+					underWaterFoam = smoothstep(0.0, 0.75, foamCaps * 1.5 * underwaterFoamSample.a);
+				#endif
+
+			//	Mask foam by the water's normals
+				FoamSample *= saturate(0.6 + (o.Normal.x * o.Normal.z) * 2.0);
+
+				FoamSample = saturate(FoamSample * _FoamScale);
+				FoamSample = FoamSample * smoothstep( 0.8 - rawFoamSample.a, 1.6 - rawFoamSample.a, FoamSample) * _FoamScale;
+
+
+			//	Add Foam Projectors
+				#if defined (USINGWATERPROJECTORS)
+					fixed4 projectedFoam = tex2D(_LuxWater_FoamOverlay, projectionUVs);
+				//	This way we get "regular" foam
+					FoamSample = saturate(FoamSample + projectedFoam.r  
+					#if defined(_GERSTNERDISPLACEMENT)
+						* vignette
+					#endif
+					* smoothstep( 0.8 - rawFoamSample.a, 1.6 - rawFoamSample.a, projectedFoam.r));
+				#endif
+
+
+				o.Foam.a = saturate(FoamSample * _FoamColor.a);
+				o.Foam.rgb = _FoamColor.rgb;
+
+				half3 FoamNormal = UnpackScaleNormal(rawFoamSample.rgbr, o.Foam.a * _FoamNormalScale);
+				FoamNormal *= o.FacingSign;
+
+
+			//	Add simple Foam Projectors
+				#if defined (USINGWATERPROJECTORS)
+					//o.Foam.rgb = lerp(o.Foam.rgb, half3(1,0,0), saturate(projectedFoam.g + (1 - o.Foam.a ) * 64 * projectedFoam.g    ) );
+					o.Foam.a = saturate(o.Foam.a + projectedFoam.g
+						#if defined(_GERSTNERDISPLACEMENT)
+							* vignette
+						#endif
+					);
+				#endif
+
+
+			//	Tweak all other outputs
+				o.Translucency *= 1.0 - o.Foam.a;
+				o.Normal = lerp(o.Normal, FoamNormal, o.Foam.a);
+				o.Smoothness = lerp(o.Smoothness, 0.1, o.Foam.a);
+				o.ReflectionSmoothness = lerp(o.ReflectionSmoothness, 0.1, o.Foam.a);
+				o.Caustics *= (1.0 - o.Foam.a);
+
+			//	Add underwater foam to foam mask
+				#if defined(_GERSTNERDISPLACEMENT)
+					o.Foam.a = saturate(o.Foam.a + underWaterFoam);
+				#endif
+
+			#endif
+
+		//	-----------------------------------------------------------------------
+		//	Reflections
+
+		//	Planar reflections
+			#if defined (GEOM_TYPE_MESH)
+				#if defined (UNITY_PASS_FORWARDBASE)
+					#if defined(_GERSTNERDISPLACEMENT)
+					//	When Gerstner Waves are enabled reflOffeset is calculated using tangent space normal (wrong of course) + geometric worldnormal, so we can adjust both independently.
+						//float2 reflOffset = (o.Normal.xy * _ReflectionBumpScale + wNormal.xz * o.FacingSign * _ReflectionGeoScale) * offsetFactor;
+						float2 reflOffset = WorldNormalVector(IN, lerp( half3(0,0,1 * o.FacingSign), o.Normal, _ReflectionBumpScale)).xz * offsetFactor;
+						//reflOffset.y -= IN.color.a * _GerstnerVerticalIntensity * perspectiveFadeFactor; // perspectiveFadeFactor does not do much
+						
+						float2 refluv = (IN.grabUV.xy / IN.grabUV.w) + reflOffset;
+					#else
+					//	When displacement is disabled we take the "regular" worldnormal.
+						float2 reflOffset = WorldNormalVector(IN, lerp( half3(0,0,1 * o.FacingSign), o.Normal, _ReflectionBumpScale)).xz * offsetFactor;
+						float2 refluv = (IN.grabUV.xy / IN.grabUV.w) + reflOffset;
+					#endif
+					o.Reflections = tex2D(_LuxWater_ReflectionTex, refluv.xy);
+					o.ReflectionNormal = 0;
+				#else
+					o.Reflections = 0;
+				#endif
+
+			#else
+				o.ReflectionNormal = WorldNormalVector( IN, lerp( half3(0,0,1 * o.FacingSign), o.Normal, _ReflectionBumpScale) );
+			//	#if defined(_GERSTNERDISPLACEMENT)
+			//		o.ReflectionNormal = lerp(half3(0,1,0), o.ReflectionNormal, _ReflectionGeoScale);
+			//	#endif
+			#endif
+
+///
+			o.Albedo = c.rgb;
+
+		//	In order to minimize artifacts cause by unity's fog and refracted background with a completely different depth we have to use 2 blend values.
+		//	x is used to blend water with scene.
+		//	y is used to blend refracted to fully lit water surface.
+		//	this introduces minimal ghosting but looks best so far.
+			o.Alpha.x = origEdgeBlendFactor;
+			o.Alpha.y = edgeBlendFactor;
+
+		//	Needed by custom fog
+			o.ClipSpaceDepth = UNITY_Z_0_FAR_FROM_CLIPSPACE(IN.grabUV.z);
+
+//			o.Emission += IN.color.a * 0.0001;
+
+		//	make worlPos get compiled out
+//			o.worldNormalFace = WorldNormalVector(IN, half3(0,0,1));
+//			o.Emission += /*(1 - edgeBlendFactor) +*/ (IN.worldPos.x + o.worldNormalFace.y + edgeBlendFactor) * 0.0000001 ;
+//			o.Emission += /*(1 - edgeBlendFactor) +*/ frac(IN.worldPos.x + o.worldNormalFace.y) * 0.0001 ;
+
+		}
+		ENDCG
+
+// ////////////////////////
+
+	}
+	CustomEditor "LuxWaterMaterialEditor"
+}

@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f2b44126ff4eb34e941cfec7bfae3a0, type: 3}
+  m_Name: FlexContainer
+  m_EditorClassIdentifier: 
+  m_simpleMode: 1
+  m_simpleMaxParticles: 10000
+  m_simpleSubstepCount: 2
+  m_simpleIterationCount: 5
+  m_simpleGravity: {x: 0, y: -9.81, z: 0}
+  m_simpleParticleSize: 0.1
+  m_simpleParticleFriction: 0.1
+  m_simpleParticleRestitution: 0
+  m_simpleParticleAdhesion: 0
+  m_simpleParticleDamping: 0
+  m_simpleClothWind: {x: 0, y: 0, z: 0}
+  m_simpleClothDrag: 0
+  m_simpleClothLift: 0
+  m_simpleFluidCohesion: 0.025
+  m_simpleFluidTension: 0.01
+  m_simpleFluidViscosity: 0
+  m_simpleFluidVorticity: 0
+  m_simpleFluidAnisotropy: 2
+  m_simpleFluidMinScale: 0.2
+  m_simpleFluidMaxScale: 1
+  m_maxParticles: 10000
+  m_maxDiffuse: 0
+  m_maxNeighbors: 100
+  m_maxContacts: 6
+  m_recreateSolver: 0
+  m_substepCount: 3
+  m_iterationCount: 5
+  m_gravity: {x: 0, y: -9.81, z: 0}
+  m_radius: 0.2
+  m_solidRest: 0.1
+  m_fluidRest: 0.1
+  m_staticFriction: 0.3
+  m_dynamicFriction: 0.2
+  m_particleFriction: 0.1
+  m_restitution: 0
+  m_adhesion: 0
+  m_sleepThreshold: 0
+  m_maxSpeed: 3.4028235e+38
+  m_maxAcceleration: 3.4028235e+38
+  m_shockPropagation: 0
+  m_dissipation: 0
+  m_damping: 0
+  m_wind: {x: 0, y: 0, z: 0}
+  m_drag: 0
+  m_lift: 0
+  m_fluid: 1
+  m_cohesion: 0.025
+  m_surfaceTension: 0
+  m_viscosity: 0
+  m_vorticityConfinement: 0
+  m_anisotropyScale: 2
+  m_anisotropyMin: 0.1
+  m_anisotropyMax: 1
+  m_smoothing: 0
+  m_solidPressure: 0
+  m_freeSurfaceDrag: 0
+  m_buoyancy: 1
+  m_diffuseThreshold: 0
+  m_diffuseBuoyancy: 0
+  m_diffuseDrag: 0
+  m_diffuseBallistic: 0
+  m_diffuseLifetime: 0
+  m_plasticThreshold: 0
+  m_plasticCreep: 0
+  m_collisionDistance: 0.05
+  m_particleCollisionMargin: 0
+  m_shapeCollisionMargin: 0
+  m_planes: []
+  m_relaxationMode: 1
+  m_relaxationFactor: 1
+  m_fluidMaterial: {fileID: 2100000, guid: e6bb4a2d00eee9b44a69e6352f81d27d, type: 2}
+  m_showTimers: 0
